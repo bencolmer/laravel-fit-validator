@@ -26,7 +26,7 @@ return [
         'default' => [
             'appId' => (string) env('FIT_APP_ID', ''),
             'jwksUrl' => (string) env('FIT_JWKS_URL', ''),
-        ]
+        ],
     ],
 
 ];

@@ -3,9 +3,9 @@
 namespace BenColmer\LaravelFITValidator\Providers;
 
 use BenColmer\LaravelFITValidator\Http\Middleware\ValidateFIT;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider as Provider;
 
-class FITValidatorServiceProvider extends ServiceProvider
+class ServiceProvider extends Provider
 {
     /**
      * Bootstrap any application services.

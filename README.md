@@ -29,7 +29,7 @@ Route::middleware('fit')->group(function () {
 
 ## Token Usage
 
-The `fit` middleware will validate the Forge Invocation Token and add the validated payload to the request input bag.
+The `fit` middleware will validate the Forge Invocation Token and add the validated payload to the request input array.
 
 Example:
 
@@ -67,7 +67,7 @@ You can configure the package validate FIT tokens from multiple Forge applicatio
 php artisan vendor:publish --provider="BenColmer\LaravelFITValidator\Providers\ServiceProvider"
 ```
 
-2. Add your application details to the `applications` array in `config/fit.php`:
+2. Add your Forge application details to the `applications` array in `config/fit.php`:
 
 ```php
 // ...

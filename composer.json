@@ -1,5 +1,5 @@
 {
-    "name": "bencolmer/laravel-fit-validation",
+    "name": "bencolmer/laravel-fit-validator",
     "description": "Validate Atlassian Forge Invocation Tokens (FITs) in Laravel",
     "keywords": [
         "laravel",
@@ -18,7 +18,10 @@
     ],
     "require": {
         "php": "^8.1",
+        "firebase/php-jwt": "^7.0",
+        "guzzlehttp/guzzle": "^7.10",
         "illuminate/contracts": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
         "illuminate/support": "^10.0|^11.0|^12.0"
     },
     "require-dev": {
@@ -26,13 +29,13 @@
     },
     "autoload": {
         "psr-4": {
-            "BenColmer\\LaravelFITValidation\\": "src/"
+            "BenColmer\\LaravelFITValidator\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "BenColmer\\LaravelFITValidation\\Providers\\LaravelFITValidation"
+                "BenColmer\\LaravelFITValidator\\Providers\\FITValidatorServiceProvider"
             ]
         }
     },

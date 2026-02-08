@@ -46,7 +46,7 @@ Route::middleware('fit')->group(function () {
 
 use Illuminate\Http\Request;
 
-class JiraController extends Controller
+class ExampleController extends Controller
 {
     public function index(Request $request)
     {
@@ -59,7 +59,7 @@ class JiraController extends Controller
 
 ## Advanced Usage
 
-You can configure the package validate FIT tokens from multiple Forge applications:
+You can configure the package to validate FIT tokens from multiple Forge applications:
 
 1. Publish package configuration
 
@@ -99,13 +99,13 @@ Route::middleware('fit:otherApp')->group(function () {
 
 ## Additional Configuration
 
-The following options are also available by publishing the package configuration:
+The following options can also be modified by publishing the package configuration:
 
-| Name | Default Value | Purpose |
+| Name | Default Value | Description |
 |-------|---------|---------|
-| `middlewareAlias` | `fit` | Defines the alias for the FIT validation middleware |
-| `issuer` | `forge/invocation-token` | Defines the expected Forge Invocation Token issuer |
-| `jwksCacheDuration` | 5 minutes | Defines the cache duration for fetched JSON Web Key Sets. Setting this to `null` will disable caching. |
+| `middlewareAlias` | `fit` | The alias for the FIT validation middleware |
+| `issuer` | `forge/invocation-token` | The expected Forge Invocation Token issuer |
+| `jwksCacheDuration` | 5 minutes | The cache duration for fetched JSON Web Key Sets. Setting this to `null` will disable caching |
 
 
 ## Testing

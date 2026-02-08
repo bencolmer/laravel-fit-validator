@@ -3,6 +3,7 @@
 namespace BenColmer\LaravelFITValidator\Providers;
 
 use BenColmer\LaravelFITValidator\Http\Middleware\ValidateFIT;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as Provider;
 
 class ServiceProvider extends Provider
@@ -30,6 +31,7 @@ class ServiceProvider extends Provider
 
     protected function registerMiddleware(): void
     {
-        $this->app->make('router')->aliasMiddleware('fit', ValidateFIT::class);
+        $alias = Config::get('fit.middlewareAlias', 'fit');
+        $this->app->make('router')->aliasMiddleware($alias, ValidateFIT::class);
     }
 }

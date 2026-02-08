@@ -2,14 +2,15 @@
 
 namespace BenColmer\LaravelFITValidator;
 
+use BenColmer\LaravelFITValidator\Contracts\FITKeySetClient as FITKeySetClientContract;
 use BenColmer\LaravelFITValidator\Contracts\FITValidator as FITValidatorContract;
 use BenColmer\LaravelFITValidator\Exceptions\ConfigurationException;
 use BenColmer\LaravelFITValidator\Exceptions\ValidationException;
 use Exception;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
@@ -26,17 +27,18 @@ class FITValidator implements FITValidatorContract
     protected string $appId;
 
     /**
-     * The JSON Web Key Set url for the app.
+     * The key set client.
      */
-    protected string $jwksUrl;
+    protected FITKeySetClientContract $keySetClient;
 
     public function __construct(string $appKey = 'default')
     {
         $this->appId = (string) Config::get("fit.applications.{$appKey}.appId");
         if (! $this->appId) throw new ConfigurationException($appKey, 'appId');
 
-        $this->jwksUrl = (string) Config::get("fit.applications.{$appKey}.jwksUrl");
-        if (! $this->jwksUrl) throw new ConfigurationException($appKey, 'jwksUrl');
+        $this->keySetClient = App::makeWith(FITKeySetClientContract::class, [
+            'appKey' => $appKey
+        ]);
     }
 
     public function validate(Request|string $input): ?array
@@ -46,9 +48,9 @@ class FITValidator implements FITValidatorContract
             throw new ValidationException('JWT is missing from the validation input.');
         }
 
-        $jwks = $this->fetchJwks();
+        $jwks = $this->keySetClient->get();
         if (! $jwks) {
-            throw new ValidationException('Failed to fetch JWKS.');
+            throw new ValidationException('Failed to retrieve JWKS.');
         }
 
         try {
@@ -71,7 +73,9 @@ class FITValidator implements FITValidatorContract
 
             return $payload;
         } catch (Exception $e) {
-            Log::warning('FIT failed validation.');
+            if (Config::get('app.debug', false)) {
+                Log::info('FIT failed validation.');
+            }
 
             throw new ValidationException($e);
         }
@@ -87,37 +91,5 @@ class FITValidator implements FITValidatorContract
         // expected format is "Bearer {FIT}"
         $parts = explode(' ', $auth, 2);
         return isset($parts[1]) && is_string($parts[1]) ? $parts[1] : null;
-    }
-
-    /**
-     * Fetch the JSON Web Key Set from the JWKS URL.
-     */
-    protected function fetchJwks(): ?array
-    {
-        $client = new Client();
-        $response = $client->get($this->jwksUrl, [
-            'http_errors' => false
-        ]);
-
-        $statusCode = $response->getStatusCode();
-        if ($statusCode < 200 || $statusCode >= 300) {
-            Log::error('{statusCode} HTTP status code encountered while fetching JWKS URL from "{url}".', [
-                'statusCode' => $statusCode,
-                'url' => $this->jwksUrl,
-            ]);
-
-            return null;
-        }
-
-        $jwks = json_decode((string) $response->getBody(), true);
-        if (! isset($jwks['keys'])) {
-            Log::error('Failed to parse JWKS fetched from "{url}".', [
-                'url' => $this->jwksUrl,
-            ]);
-
-            return null;
-        }
-
-        return $jwks;
     }
 }

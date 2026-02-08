@@ -7,6 +7,7 @@ use BenColmer\LaravelFITValidator\Exceptions\ValidationException;
 use BenColmer\LaravelFITValidator\FITValidator;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -19,7 +20,6 @@ class ValidateFIT
      */
     public function handle(Request $request, Closure $next, string $appKey = 'default'): Response
     {
-
         $fit = $this->validate($request, $appKey);
         if (! $fit) {
             throw new HttpException(401);
@@ -39,18 +39,13 @@ class ValidateFIT
         $fit = null;
 
         try {
-            $validator = $this->getValidator($appKey);
+            $validator = App::makeWith(FITValidatorContract::class, [
+                'appKey' => $appKey
+            ]);
+
             $fit = $validator->validate($request, $appKey);
         } catch (ValidationException $e) {}
 
         return $fit;
-    }
-
-    /**
-     * Get a FIT validator instance.
-     */
-    protected function getValidator(string $appKey): FITValidatorContract
-    {
-        return new FITValidator($appKey);
     }
 }

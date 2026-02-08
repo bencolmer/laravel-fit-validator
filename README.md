@@ -97,6 +97,17 @@ Route::middleware('fit:otherApp')->group(function () {
 });
 ```
 
+## Additional Configuration
+
+The following options are also available by publishing the package configuration:
+
+| Name | Default Value | Purpose |
+|-------|---------|---------|
+| `middlewareAlias` | `fit` | Defines the alias for the FIT validation middleware |
+| `issuer` | `forge/invocation-token` | Defines the expected Forge Invocation Token issuer |
+| `jwksCacheDuration` | 5 minutes | Defines the cache duration for fetched JSON Web Key Sets. Setting this to `null` will disable caching. |
+
+
 ## Testing
 
 Run tests via PHPUnit:

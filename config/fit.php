@@ -24,7 +24,7 @@ return [
     | Middleware Alias
     |--------------------------------------------------------------------------
     |
-    | Define the alias for the FIT validation middleware.
+    | The alias for the FIT validation middleware.
     |
     */
 
@@ -35,10 +35,21 @@ return [
     | Issuer
     |--------------------------------------------------------------------------
     |
-    | Define the expected Forge Invocation Token issuer.
+    | The expected Forge Invocation Token issuer.
     |
     */
 
     'issuer' => 'forge/invocation-token',
+
+    /*
+    |--------------------------------------------------------------------------
+    | JWKS Cache Duration
+    |--------------------------------------------------------------------------
+    |
+    | The JSON Web Key Set cache duration in seconds.
+    |
+    */
+
+    'jwksCacheDuration' => 60 * 5,
 
 ];
